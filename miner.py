@@ -44,10 +44,10 @@ def main():
     with open('equities.lgt', mode='w') as stocks_db:
         for ticker in tickers:
             stock = Stock(ticker)
-            peers, advanced_stats = set(stock.get_peers()), stock.get_advanced_stats()
+            peers, advanced_stats, company = set(stock.get_peers()), stock.get_advanced_stats(), stock.get_company()
             ticker_peers = ticker_peers | peers
 
-            stocks_db.write("stock('{}', {}, {}).\n".format(ticker, list(peers), format_dict(advanced_stats)))
+            stocks_db.write("stock('{}', {}, {}, {}).\n".format(ticker, format_dict(company), list(peers), format_dict(advanced_stats)))
             time.sleep(0.5)
 
         for ticker_peer in ticker_peers:
@@ -55,7 +55,7 @@ def main():
             peers, advanced_stats = set(stock.get_peers()), stock.get_advanced_stats()
 
             if ticker_peer not in tickers and str.isalpha(ticker_peer):
-                stocks_db.write("stock('{}', {}, {}).\n".format(ticker_peer, list(peers), format_dict(advanced_stats)))
+                stocks_db.write("stock('{}', {}, {}, {}).\n".format(ticker_peer, format_dict(company), list(peers), format_dict(advanced_stats)))
             time.sleep(0.5)
 
 
