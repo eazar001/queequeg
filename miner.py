@@ -33,7 +33,7 @@ def format_kv(x):
 
 
 def main():
-    tickers = set([])
+    tickers, ticker_peers = set([]), set([])
 
     with open('crsp_large_cap_value.csv', newline='') as equities_file:
         reader = csv.reader(equities_file)
@@ -45,7 +45,17 @@ def main():
         for ticker in tickers:
             stock = Stock(ticker)
             peers, advanced_stats = set(stock.get_peers()), stock.get_advanced_stats()
+            ticker_peers = ticker_peers | peers
+
             stocks_db.write("stock('{}', {}, {}).\n".format(ticker, list(peers), format_dict(advanced_stats)))
+            time.sleep(0.5)
+
+        for ticker_peer in ticker_peers:
+            stock = Stock(ticker_peer)
+            peers, advanced_stats = set(stock.get_peers()), stock.get_advanced_stats()
+
+            if ticker_peer not in tickers:
+                stocks_db.write("stock('{}', {}, {}).\n".format(ticker_peer, list(peers), format_dict(advanced_stats)))
             time.sleep(0.5)
 
 
