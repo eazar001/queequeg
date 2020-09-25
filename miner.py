@@ -52,7 +52,7 @@ def main():
 
         for ticker_peer in ticker_peers:
             stock = Stock(ticker_peer)
-            peers, advanced_stats = set(stock.get_peers()), stock.get_advanced_stats()
+            peers, advanced_stats, company = set(stock.get_peers()), stock.get_advanced_stats(), stock.get_company()
 
             if ticker_peer not in tickers and str.isalpha(ticker_peer):
                 stocks_db.write("stock('{}', {}, {}, {}).\n".format(ticker_peer, format_dict(company), list(peers), format_dict(advanced_stats)))
