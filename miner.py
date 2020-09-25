@@ -54,7 +54,7 @@ def main():
             stock = Stock(ticker_peer)
             peers, advanced_stats = set(stock.get_peers()), stock.get_advanced_stats()
 
-            if ticker_peer not in tickers:
+            if ticker_peer not in tickers and str.isalpha(ticker_peer):
                 stocks_db.write("stock('{}', {}, {}).\n".format(ticker_peer, list(peers), format_dict(advanced_stats)))
             time.sleep(0.5)
 
