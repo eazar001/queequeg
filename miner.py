@@ -1,5 +1,6 @@
 import csv
 import time
+import string
 from iexfinance.stocks import Stock
 
 
@@ -33,7 +34,7 @@ def format_kv(x):
 
 
 def main():
-    tickers, ticker_peers = set([]), set([])
+    tickers, ticker_peers, valid_ticker_chars = set([]), set([]), set(string.ascii_uppercase + '.')
 
     with open('crsp_large_cap_value.csv', newline='') as equities_file:
         reader = csv.reader(equities_file)
@@ -54,7 +55,7 @@ def main():
             stock = Stock(ticker_peer)
             peers, advanced_stats, company = set(stock.get_peers()), stock.get_advanced_stats(), stock.get_company()
 
-            if ticker_peer not in tickers and str.isalpha(ticker_peer):
+            if ticker_peer not in tickers and set(ticker_peer) <= valid_ticker_chars:
                 stocks_db.write("stock('{}', {}, {}, {}).\n".format(ticker_peer, format_dict(company), list(peers), format_dict(advanced_stats)))
             time.sleep(0.5)
 
