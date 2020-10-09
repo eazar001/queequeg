@@ -13,8 +13,7 @@ def format_dict(d):
         if v is None:
             s += "{}: '{}'".format(format_kv(k), None)
         elif type(v) is dict:
-            s += '{}: '.format(format_kv(k))
-            s += format_dict(v)
+            s += '{}: {}'.format(format_kv(k), format_dict(v))
         else:
             s += '{}: {}'.format(format_kv(k), format_kv(v))
 
@@ -48,8 +47,10 @@ def main():
             peers, advanced_stats, company = set(stock.get_peers()), stock.get_advanced_stats(), stock.get_company()
             ticker_peers = ticker_peers | peers
 
-            stocks_db.write("stock('{}', {}, {}, {}).\n".format(ticker, format_dict(company), list(peers), format_dict(advanced_stats)))
-            time.sleep(0.5)
+            if set(ticker) <= valid_ticker_chars:
+                stocks_db.write("stock('{}', {}, {}, {}).\n".format(ticker, format_dict(company), list(peers), format_dict(advanced_stats)))
+
+            time.sleep(0.1)
 
         for ticker_peer in ticker_peers:
             stock = Stock(ticker_peer)
@@ -57,7 +58,8 @@ def main():
 
             if ticker_peer not in tickers and set(ticker_peer) <= valid_ticker_chars:
                 stocks_db.write("stock('{}', {}, {}, {}).\n".format(ticker_peer, format_dict(company), list(peers), format_dict(advanced_stats)))
-            time.sleep(0.5)
+
+            time.sleep(0.1)
 
 
 if __name__ == '__main__':
