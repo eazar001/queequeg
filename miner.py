@@ -26,8 +26,7 @@ def format_dict(d):
 
 def format_kv(x):
     if type(x) is str:
-        s = "'{}'".format(x)
-        return s.replace('\'', '\'\'')
+        return "'{}'".format(x.replace('\'', '\'\''))
 
     return str(x)
 
