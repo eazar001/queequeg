@@ -1,7 +1,7 @@
-import csv
 import time
 import string
 from iexfinance.stocks import Stock
+from iexfinance.refdata import get_symbols
 
 
 def format_dict(d):
@@ -35,11 +35,9 @@ def format_kv(x):
 def main():
     tickers, ticker_peers, valid_ticker_chars = set([]), set([]), set(string.ascii_uppercase + '.')
 
-    with open('crsp_large_cap_value.csv', newline='') as equities_file:
-        reader = csv.reader(equities_file)
-
-        for row in reader:
-            tickers.add(row[0])
+    for entry in get_symbols():
+        if entry['type'] == 'cs' and set(entry['symbol']) <= valid_ticker_chars:
+            tickers.add(entry['symbol'])
 
     with open('equities.lgt', mode='w') as stocks_db:
         for ticker in tickers:
