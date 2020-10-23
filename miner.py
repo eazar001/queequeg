@@ -1,4 +1,6 @@
 import string
+import time
+import sys
 from iexfinance.stocks import Stock
 from iexfinance.refdata import get_symbols
 
@@ -31,6 +33,24 @@ def format_kv(x):
     return str(x)
 
 
+def get_stock_info(ticker):
+    retries = 0
+
+    while retries <= 25:
+        try:
+            stock = Stock(ticker)
+            peers = set(stock.get_peers())
+            advanced_stats = stock.get_advanced_stats()
+            company = stock.get_company()
+
+            return peers, advanced_stats, company
+        except:
+            retries += 1
+            error_type, value, _traceback = sys.exc_info()
+            print('Access Error - type: {}, value: {}'.format(error_type, value))
+            time.sleep(10.0)
+
+
 def main():
     tickers, valid_ticker_chars = set([]), set(string.ascii_uppercase + '.')
 
@@ -40,8 +60,8 @@ def main():
 
     with open('equities.lgt', mode='w') as stocks_db:
         for ticker in tickers:
-            stock = Stock(ticker)
-            peers, advanced_stats, company = set(stock.get_peers()), stock.get_advanced_stats(), stock.get_company()
+            peers, advanced_stats, company = get_stock_info(ticker)
+
             if set(ticker) <= valid_ticker_chars:
                 stocks_db.write("stock('{}', {}, {}, {}).\n".format(ticker, format_dict(company), list(peers), format_dict(advanced_stats)))
 
