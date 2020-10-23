@@ -34,9 +34,9 @@ def format_kv(x):
 
 
 def get_stock_info(ticker):
-    retries = 0
+    retries, retry_limit = 0, 25
 
-    while retries <= 25:
+    while retries <= retry_limit:
         try:
             stock = Stock(ticker)
             peers = set(stock.get_peers())
@@ -49,6 +49,9 @@ def get_stock_info(ticker):
             error_type, value, _traceback = sys.exc_info()
             print('Access Error - type: {}, value: {}'.format(error_type, value))
             time.sleep(10.0)
+
+    print('Number of retries exceeded ({})'.format(retry_limit))
+    sys.exit(1)
 
 
 def main():
