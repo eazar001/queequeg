@@ -58,7 +58,7 @@ def main():
     tickers, valid_ticker_chars = set([]), set(string.ascii_uppercase + '.')
 
     for entry in get_symbols():
-        if entry['type'] == 'cs' and set(entry['symbol']) <= valid_ticker_chars:
+        if entry['type'] in ['cs', 'ps', 'ad'] and set(entry['symbol']) <= valid_ticker_chars:
             tickers.add(entry['symbol'])
 
     with open('equities.lgt', mode='w') as stocks_db:
