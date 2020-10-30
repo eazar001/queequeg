@@ -60,7 +60,7 @@ def main():
             tickers.append(entry['symbol'])
 
     length, i = len(tickers), 100
-    groups = [tickers[i - 100:i] for i in range(i, length + i, i)]
+    groups = list(filter(lambda x: x != [], [tickers[i - 100:i] for i in range(i, length + i, i)]))
 
     with open('equities.lgt', mode='w') as stocks_db:
         for group in groups:
