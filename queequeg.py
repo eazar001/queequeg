@@ -62,7 +62,7 @@ def main():
     length, i = len(tickers), 100
     groups = list(filter(lambda x: x != [], [tickers[i - 100:i] for i in range(i, length + i, i)]))
 
-    with open('equities.lgt', mode='w') as stocks_db:
+    with open('equities.lgt', mode='w', newline='') as stocks_db:
         for group in groups:
             peers, advanced_stats, company = get_stock_info(group)
 
