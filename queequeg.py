@@ -23,12 +23,14 @@ def format_dict(d):
 
     s += '}'
 
-    return s.encode("utf-8")
+    return s
 
 
 def format_kv(x):
     if type(x) is str:
-        return "'{}'".format(x.replace('\'', '\'\''))
+        s = "'{}'".format(x.replace('\'', '\'\''))
+        s = s.replace('\\', '\\\\')
+        return s
 
     return str(x)
 
@@ -62,7 +64,7 @@ def main():
     length, i = len(tickers), 100
     groups = list(filter(lambda x: x != [], [tickers[i - 100:i] for i in range(i, length + i, i)]))
 
-    with open('equities.lgt', mode='w', newline='') as stocks_db:
+    with open('equities.lgt', mode='w', newline='', encoding='utf-8') as stocks_db:
         for group in groups:
             peers, advanced_stats, company = get_stock_info(group)
 
