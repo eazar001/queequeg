@@ -23,7 +23,7 @@ def format_dict(d):
 
     s += '}'
 
-    return s
+    return s.encode("utf-8")
 
 
 def format_kv(x):
